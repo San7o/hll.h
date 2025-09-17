@@ -1,0 +1,69 @@
+hll.h
+-----
+
+Configurable, header-only implementation of HyperLogLog in C99.
+
+Author: Giovanni Santini
+Mail: giovanni.santini@proton.me
+License: MIT
+
+
+Documentation
+-------------
+
+This header-only C99 library implements the HyperLogLog algorithm
+for approximating the cardinality (number of distinct elements) of
+large multisets.
+
+The algorithm uses a hash function to map input elements to uniformly
+distributed bit patterns and records the maximum run of leading zeros
+across many independent registers. From this, it computes an estimate
+of the set’s cardinality with low memory footprint and tunable accuracy.
+
+Features:
+  - Header-only, portable C99 implementation
+  - Adjustable precision/space-accuracy tradeoff
+  - Suitable for large-scale data streams
+
+Reference:
+  S. Heule, M. Nunkesser, A. Hall,
+  "HyperLogLog in Practice: Algorithmic Engineering of a State of
+   The Art Cardinality Estimation Algorithm"
+
+
+Usage
+-----
+
+Do this:
+
+  #define HLL_IMPLEMENTATION
+
+before you include this file in *one* C or C++ file to create the
+implementation.
+
+i.e. it should look like this:
+
+  #include ...
+  #include ...
+  #include ...
+  #define HLL_IMPLEMENTATION
+  #include "hll.h"
+
+You can tune the library by #defining certain values. See the
+"Config" comments under "Configuration" below.
+
+You need to initialize a hll_t with `hll_init` and eventually
+destroy it with `hll_destroy`. To add a value, use `hll_add`. To
+get an estimate of the cardinality of the values, use
+`hll_count`. See the function definitions for more information.
+
+Check some examples at the end of the header
+
+
+TODO
+----
+
+The library should be tested more. Right now, some precision values
+do not work well so the optimal precision should be handpicked
+manually.
+Additionally, no empirical bias correction is applied.
