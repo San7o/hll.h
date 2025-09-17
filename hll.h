@@ -69,6 +69,7 @@
 // The library should be tested more. Right now, some precision values
 // do not work well so the optimal precision should be handpicked
 // manually.
+// Only the dense representation is implemented.
 // Additionally, no empirical bias correction is applied.
 //
 
