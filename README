@@ -50,14 +50,14 @@ i.e. it should look like this:
   #include "hll.h"
 
 You can tune the library by #defining certain values. See the
-"Config" comments under "Configuration" below.
+"Config" comments under "Configuration" section in the header.
 
 You need to initialize a hll_t with `hll_init` and eventually
 destroy it with `hll_destroy`. To add a value, use `hll_add`. To
 get an estimate of the cardinality of the values, use
 `hll_count`. See the function definitions for more information.
 
-Check some examples at the end of the header
+Check some examples at the end of the header.
 
 
 TODO

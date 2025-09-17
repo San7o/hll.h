@@ -60,7 +60,7 @@
 // get an estimate of the cardinality of the values, use
 // `hll_count`. See the function definitions for more information.
 //
-// Check some examples at the end of the header
+// Check some examples at the end of the header.
 //
 //
 // TODO
