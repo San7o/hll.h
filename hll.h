@@ -430,11 +430,11 @@ int hll_count(hll_t *hll)
 
     // Linear counting
     return registers_len * HLL_LOGF(registers_len / num_of_zero_registers);
-  } else if (estimate <= (1ULL << 32) / 30)
+  } else if (estimate <= (float)((1ULL << 32) / 30))
   {
     return estimate;
   } else {
-    return -(1ULL << 32) * HLL_LOGF(1 - estimate / (1ULL << 32));
+    return -(float)(1ULL << 32) * HLL_LOGF(1 - estimate / (float)(1ULL << 32));
   }
   
   return 0;
