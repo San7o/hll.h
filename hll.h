@@ -246,7 +246,7 @@ hll_error _hll_init_impl(hll_t *hll, hll_t *hll_src);
 // Notes: Allocates memory with HLL_CALLOC. You should call
 // hll_destroy when you are done.
 hll_error hll_init2(hll_t *hll,
-                   unsigned int precision);
+                    unsigned int precision);
 
 // Destroy an hll
 //
@@ -321,7 +321,7 @@ hll_error _hll_init_impl(hll_t *hll, hll_t *hll_src)
       || hll->precision > HLL_PRECISION_MAX)
     return HLL_ERROR_INVALID_PRECISION;
   
-  hll->_registers = HLL_CALLOC(sizeof(hll_hash_t), (1<<hll->precision));
+  hll->_registers = HLL_CALLOC((1<<hll->precision), sizeof(hll_hash_t));
   if (hll->_registers == NULL)
     return HLL_ERROR_ALLOCATING_MEMORY;
   
