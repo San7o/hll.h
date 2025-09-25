@@ -60,6 +60,20 @@ get an estimate of the cardinality of the values, use
 Check some examples at the end of the header.
 
 
+Code
+----
+
+The official git repository of micro-hll.h is hosted at:
+
+    https://github.com/San7o/micro-hll.h
+
+This is part of a bigger collection of header-only C99 libraries
+called "micro-headers", contributions are welcome:
+
+    https://github.com/San7o/micro-headers
+
+
+
 TODO
 ----
 
