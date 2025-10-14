@@ -1,5 +1,5 @@
 hll.h
------
+=====
 
 Configurable, header-only implementation of HyperLogLog in C99.
 

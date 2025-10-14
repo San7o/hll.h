@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 //
 // hll.h
-// -----
+// =====
 //
 // Configurable, header-only implementation of HyperLogLog in C99.
 //
@@ -86,8 +86,8 @@
 // Additionally, no empirical bias correction is applied.
 //
 
-#ifndef _HLL_H_
-#define _HLL_H_
+#ifndef HLL
+#define HLL
 
 #define HLL_VERSION_MAJOR 0
 #define HLL_VERSION_MINOR 1
@@ -99,6 +99,13 @@ extern "C" {
 //
 // Configurations
 //
+
+// Config: Prefix for all functions
+// For function inlining, set this to `static inline` and then define
+// the implementation in all the files
+#ifndef HLL_DEF
+  #define HLL_DEF extern
+#endif
 
 // Config: the default precision.
 //
@@ -246,7 +253,7 @@ typedef int hll_error;
 //
 // Notes: Allocates memory with HLL_CALLOC. You should call
 // hll_destroy when you are done.
-hll_error _hll_init_impl(hll_t *hll, hll_t *hll_src);
+HLL_DEF hll_error _hll_init_impl(hll_t *hll, hll_t *hll_src);
 
 // Initialize hll
 //
@@ -258,8 +265,8 @@ hll_error _hll_init_impl(hll_t *hll, hll_t *hll_src);
 //
 // Notes: Allocates memory with HLL_CALLOC. You should call
 // hll_destroy when you are done.
-hll_error hll_init2(hll_t *hll,
-                    unsigned int precision);
+HLL_DEF hll_error hll_init2(hll_t *hll,
+                            unsigned int precision);
 
 // Destroy an hll
 //
@@ -269,7 +276,7 @@ hll_error hll_init2(hll_t *hll,
 // Returns: 0 on success, or a negative hll_error
 //
 // Notes: uses HLL_FREE. Must be called after hll_init or hll_init2
-hll_error hll_destroy(hll_t *hll);
+HLL_DEF hll_error hll_destroy(hll_t *hll);
 
 // Add an element to the hll structure
 //
@@ -279,9 +286,9 @@ hll_error hll_destroy(hll_t *hll);
 //  - element_len: length of the element
 //
 // Returns: 0 on success, or a negative hll_error
-hll_error hll_add(hll_t *hll,
-                  hll_element_t element,
-                  unsigned int element_len);
+HLL_DEF hll_error hll_add(hll_t *hll,
+                          hll_element_t element,
+                          unsigned int element_len);
 
 // Get an estimate of the cardinality of the elements
 //
@@ -290,14 +297,14 @@ hll_error hll_add(hll_t *hll,
 //
 // Returns: a non-negative estimation of the cardinality, or a
 // negative hll_error
-int hll_count(hll_t *hll);
+HLL_DEF int hll_count(hll_t *hll);
 
 // Merge hll stc into hll destination
 //
 // Args:
 //  - hll_dest: pointer to the destination hll structure
 //  - hll_src: pointer to the source hll structure
-hll_error hll_merge(hll_t *hll_dest, hll_t *hll_src);
+HLL_DEF hll_error hll_merge(hll_t *hll_dest, hll_t *hll_src);
 
 // Fast hash function for strings
 //
@@ -306,7 +313,7 @@ hll_error hll_merge(hll_t *hll_dest, hll_t *hll_src);
 //  - input_len: length of the input
 //
 // Returns: the hashed value of the input
-unsigned int hll_hash_string(char* input, unsigned int input_len);
+HLL_DEF unsigned int hll_hash_string(char* input, unsigned int input_len);
 
 // Convert error value into string
 //
@@ -314,7 +321,7 @@ unsigned int hll_hash_string(char* input, unsigned int input_len);
 //  - error: the (negative) error valie
 //
 // Returns: a string describing the error
-const char *hll_error_string(hll_error error);
+HLL_DEF const char *hll_error_string(hll_error error);
 
 //
 // Implementation
@@ -322,7 +329,7 @@ const char *hll_error_string(hll_error error);
 
 #ifdef HLL_IMPLEMENTATION
 
-hll_error _hll_init_impl(hll_t *hll, hll_t *hll_src)
+HLL_DEF hll_error _hll_init_impl(hll_t *hll, hll_t *hll_src)
 {
   if (hll == NULL)
     return HLL_ERROR_HLL_NULL;
@@ -341,13 +348,13 @@ hll_error _hll_init_impl(hll_t *hll, hll_t *hll_src)
   return HLL_OK;
 }
 
-hll_error hll_init2(hll_t *hll,
+HLL_DEF hll_error hll_init2(hll_t *hll,
                    unsigned int precision)
 {
   return _hll_init_impl(hll, &(hll_t){.precision = precision});
 }
 
-hll_error hll_destroy(hll_t *hll)
+HLL_DEF hll_error hll_destroy(hll_t *hll)
 {
   if (hll == NULL)
     return HLL_ERROR_HLL_NULL;
@@ -360,12 +367,13 @@ hll_error hll_destroy(hll_t *hll)
   return HLL_OK;
 }
 
-hll_hash_t hll_max(hll_hash_t a, hll_hash_t b)
+HLL_DEF hll_hash_t hll_max(hll_hash_t a, hll_hash_t b)
 {
   return (a > b) ? a : b;
 }
 
-unsigned int hll_get_hash_zeros(hll_hash_t hash, unsigned int precision)
+HLL_DEF unsigned int
+hll_get_hash_zeros(hll_hash_t hash, unsigned int precision)
 {
   hll_hash_t head = hash & ((1 << precision) - 1);
   unsigned int count = 0;
@@ -378,7 +386,7 @@ unsigned int hll_get_hash_zeros(hll_hash_t hash, unsigned int precision)
   return count;
 }
   
-hll_error hll_add(hll_t *hll,
+HLL_DEF hll_error hll_add(hll_t *hll,
                   hll_element_t element,
                   unsigned int element_len)
 {
@@ -399,7 +407,7 @@ hll_error hll_add(hll_t *hll,
   return HLL_OK;
 }
 
-int hll_count(hll_t *hll)
+HLL_DEF int hll_count(hll_t *hll)
 {
   if (hll == NULL)
     return HLL_ERROR_HLL_NULL;
@@ -473,7 +481,7 @@ hll_error hll_merge(hll_t *hll_dest, hll_t *hll_src)
 
 // hash [bytes] of size [len]
 // Credits to http://www.cse.yorku.ca/~oz/hash.html
-unsigned int hll_hash_string(char *bytes, unsigned int len)
+HLL_DEF unsigned int hll_hash_string(char *bytes, unsigned int len)
 {
   unsigned int hash = 5381;
   for (unsigned int i = 0; i < len; ++i)
@@ -484,7 +492,7 @@ unsigned int hll_hash_string(char *bytes, unsigned int len)
 #if _HLL_ERROR_MAX != -5
   #error "Updated HLL_ERRORs, should update hll_error_string"
 #endif
-const char *hll_error_string(hll_error error)
+HLL_DEF const char *hll_error_string(hll_error error)
 {
   if (error >= 0)
     return "HLL_OK";
@@ -580,4 +588,4 @@ int main(void)
 }
 #endif
   
-#endif // _HLL_H_
+#endif // HLL
